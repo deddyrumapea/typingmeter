@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <p id="demo"></p>
+    <script>
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var myObj = JSON.parse(this.responseText);
+          document.getElementById("demo").innerHTML = myObj;
+          console.log(this.responseText);
+        }
+      };
+      xmlhttp.open(
+        "GET",
+        "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/raw/english_200.json",
+        true
+      );
+      xmlhttp.send();
+    </script>
+    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
