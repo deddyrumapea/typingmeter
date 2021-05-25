@@ -71,7 +71,7 @@
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           response = randomWords(JSON.parse(this.responseText).words);
-          feedWords();
+          startTest();
         }
       };
       request.open(
@@ -109,14 +109,24 @@
       }
 
       function restartTest() {
+        startTest();
+      }
+
+      function endTest() {
+        $("#input-typed").prop("disabled", true);
+        $("#input-typed").val("");
+      }
+
+      function startTest() {
         response = randomWords(response);
         started = false;
         currentIndex = 0;
         correct = 0;
         incorrect = 0;
-
         feedWords();
         resetTimer();
+        $("#input-typed").prop("disabled", false);
+        $("#input-typed").val("");
         $("#input-typed").focus();
       }
 
@@ -126,6 +136,7 @@
           if (seconds <= 0) {
             clearInterval(timer);
             alert(`Time is up\nCorrect : ${correct}\nIncorrect : ${incorrect}`);
+            endTest();
           }
 
           $("#span-timer").text(`00:${seconds < 10 ? "0" : ""}${seconds % 60}`);
@@ -136,7 +147,7 @@
       function resetTimer() {
         clearInterval(timer);
         timer = null;
-        $("#span-timer").text("1:00");
+        $("#span-timer").text("01:00");
       }
 
       function highlightWord(index = 0, color = "bg-secondary") {
