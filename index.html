@@ -45,9 +45,9 @@
             />
             <span id="span-timer" class="input-group-text px-4">01:00</span>
             <button
+              id="button-restart"
               class="btn btn-success px-4"
               type="button"
-              id="button-reset"
             >
               <i class="bi bi-arrow-repeat"></i>
             </button>
@@ -57,60 +57,113 @@
     </div>
 
     <script>
-      let request = new XMLHttpRequest();
       let response = Array();
+      let wordsCount = 390;
+      let feedCount = 30;
+      let timeLimit = 59;
+      let started = false;
+      let currentIndex = 0;
+      let correct = 0;
+      let incorrect = 0;
+      let timer = null;
 
+      let request = new XMLHttpRequest();
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-          response = JSON.parse(this.responseText).words;
-
-          randomWords(response);
+          response = randomWords(JSON.parse(this.responseText).words);
           feedWords();
         }
       };
-
       request.open(
         "GET",
         "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/raw/english_200.json",
         true
       );
-
       request.send();
-    </script>
 
-    <script>
-      let words = Array();
-      function randomWords(data) {
-        for (let i = 0; i < 390; i++) {
-          let word = data[Math.floor(Math.random() * data.length)];
-          words.push(`<span wordnumber="${i}">${word}</span> `);
+      function randomWords(words) {
+        let result = Array();
+        for (let i = 0; i < wordsCount; i++) {
+          let word = words[Math.floor(Math.random() * words.length)];
+          result.push(word);
         }
+        return result;
       }
 
-      function feedWords(startFrom = 0, count = 30) {
-        let wordsHtml = "";
+      function spanifyWords(words) {
+        let result = Array();
+        words.forEach((word, i) => {
+          result.push(`<span wordnumber="${i}">${word}</span> `);
+        });
+        return result;
+      }
+
+      function feedWords(startFrom = 0, count = feedCount) {
+        let words = spanifyWords(response);
+        let wordsSpan = "";
         for (let i = startFrom; i < startFrom + count; i++) {
-          wordsHtml += words[i];
+          wordsSpan += words[i];
         }
-        $("#paragraph-words").html(wordsHtml);
+        $("#paragraph-words").html(wordsSpan);
         highlightWord(startFrom);
       }
 
-      function restartTest() {}
-    </script>
+      function restartTest() {
+        response = randomWords(response);
+        started = false;
+        currentIndex = 0;
+        correct = 0;
+        incorrect = 0;
 
-    <script>
-      let timerStarted = false;
-      let currentIndex = 0;
-      let correct = 0;
-      let incorrect = 0;
+        feedWords();
+        resetTimer();
+        $("#input-typed").focus();
+      }
+
+      function startTimer() {
+        let seconds = timeLimit;
+        timer = setInterval(() => {
+          if (seconds <= 0) {
+            clearInterval(timer);
+            alert(`Time is up\nCorrect : ${correct}\nIncorrect : ${incorrect}`);
+          }
+
+          $("#span-timer").text(`00:${seconds < 10 ? "0" : ""}${seconds % 60}`);
+          seconds--;
+        }, 1000);
+      }
+
+      function resetTimer() {
+        clearInterval(timer);
+        timer = null;
+        $("#span-timer").text("1:00");
+      }
+
+      function highlightWord(index = 0, color = "bg-secondary") {
+        let previousWord = $(`span[wordnumber="${index - 1}"]`);
+        previousWord.removeClass(color);
+
+        let currentWord = $(`span[wordnumber="${index}"]`);
+        currentWord.removeClass();
+        currentWord.addClass(color);
+      }
+
+      function setWordColor(index = 0, color = "text-body") {
+        let currentWord = $(`span[wordnumber="${index}"]`);
+        currentWord.removeClass();
+        currentWord.addClass(color);
+      }
+
+      $("#button-restart").click(function () {
+        restartTest();
+      });
 
       $("#input-typed").keyup(function (event) {
         let typed = $("#input-typed").val();
         let currentWord = $(`span[wordnumber="${currentIndex}"]`).text();
-        if (!timerStarted && typed.length == 1) {
+        if (!started && typed.length == 1) {
           startTimer();
-          timerStarted = true;
+          started = true;
         }
 
         if (event.key == " ") {
@@ -134,38 +187,6 @@
           highlightWord(currentIndex, correct ? "bg-secondary" : "bg-danger");
         }
       });
-    </script>
-
-    <script>
-      function startTimer() {
-        let seconds = 59;
-        let timer = setInterval(() => {
-          if (seconds <= 0) {
-            clearInterval(timer);
-            alert(`Time is up\nCorrect : ${correct}\nIncorrect : ${incorrect}`);
-          }
-
-          $("#span-timer").text(`00:${seconds < 10 ? "0" : ""}${seconds % 60}`);
-          seconds--;
-        }, 1000);
-      }
-    </script>
-
-    <script>
-      function highlightWord(index = 0, color = "bg-secondary") {
-        let previousWord = $(`span[wordnumber="${index - 1}"]`);
-        previousWord.removeClass(color);
-
-        let currentWord = $(`span[wordnumber="${index}"]`);
-        currentWord.removeClass();
-        currentWord.addClass(color);
-      }
-
-      function setWordColor(index = 0, color = "text-body") {
-        let currentWord = $(`span[wordnumber="${index}"]`);
-        currentWord.removeClass();
-        currentWord.addClass(color);
-      }
     </script>
 
     <script
