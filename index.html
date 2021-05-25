@@ -36,7 +36,7 @@
             </div>
           </div>
 
-          <div class="input-group">
+          <div class="input-group mb-5">
             <input
               id="input-typed"
               type="text"
@@ -52,33 +52,71 @@
               <i class="bi bi-arrow-repeat"></i>
             </button>
           </div>
+
+          <div
+            id="card-result"
+            class="card visually-hidden"
+            style="width: 18rem"
+          >
+            <div class="card-header">Result</div>
+            <div class="card-body">
+              <h3
+                id="result-wpm"
+                class="card-title text-center text-success"
+              ></h3>
+              <table class="table">
+                <tr>
+                  <th>Keystrokes</th>
+                  <td id="result-keystrokes"></td>
+                </tr>
+                <tr>
+                  <th>Accuracy</th>
+                  <td id="result-accuracy"></td>
+                </tr>
+                <tr>
+                  <th>Correct words</th>
+                  <td id="result-correct-words"></td>
+                </tr>
+                <tr>
+                  <th>Wrong words</th>
+                  <td id="result-wrong-words"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <script>
-      let response = Array();
+      let started = false;
+
       let wordsCount = 390;
       let feedCount = 30;
-      let timeLimit = 59;
-      let started = false;
-      let currentIndex = 0;
-      let correct = 0;
-      let incorrect = 0;
+
       let timer = null;
+      let timeLimit = 59;
+
+      let currentIndex = 0;
+      let correctWords = Array();
+      let incorrectWords = Array();
 
       let request = new XMLHttpRequest();
+      let response = Array();
+
       request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           response = randomWords(JSON.parse(this.responseText).words);
           startTest();
         }
       };
+
       request.open(
         "GET",
         "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/raw/english_200.json",
         true
       );
+
       request.send();
 
       function randomWords(words) {
@@ -113,16 +151,47 @@
       }
 
       function endTest() {
+        clearInterval(timer);
+
         $("#input-typed").prop("disabled", true);
         $("#input-typed").val("");
+        $("#card-result").removeClass("visually-hidden");
+
+        let correctKeystrokes = 0;
+        let incorrectKeystrokes = 0;
+
+        correctWords.forEach((element) => {
+          correctKeystrokes += element.length;
+        });
+        correctKeystrokes += correctWords.length; // add spaces keystrokes
+
+        incorrectWords.forEach((element) => {
+          let wrongIndex = element[0];
+          let correctAnswer = response[wrongIndex];
+
+          element[1].split("").forEach((letter, i) => {
+            if (letter != correctAnswer.charAt(i)) incorrectKeystrokes++;
+          });
+        });
+
+        let totalKeystrokes = correctKeystrokes + incorrectKeystrokes;
+        let accuracy = ((correctKeystrokes / totalKeystrokes) * 100).toFixed(2);
+
+        $("#result-wpm").text(`${correctWords.length} WPM`);
+        $("#result-keystrokes").text(
+          `(${correctKeystrokes} | ${incorrectKeystrokes}) ${totalKeystrokes}`
+        );
+        $("#result-accuracy").text(accuracy);
+        $("#result-correct-words").text(correctWords.length);
+        $("#result-wrong-words").text(incorrectWords.length);
       }
 
       function startTest() {
         response = randomWords(response);
         started = false;
         currentIndex = 0;
-        correct = 0;
-        incorrect = 0;
+        correctWords = Array();
+        incorrectWords = Array();
         feedWords();
         resetTimer();
         $("#input-typed").prop("disabled", false);
@@ -131,14 +200,10 @@
       }
 
       function startTimer() {
+        started = true;
         let seconds = timeLimit;
         timer = setInterval(() => {
-          if (seconds <= 0) {
-            clearInterval(timer);
-            alert(`Time is up\nCorrect : ${correct}\nIncorrect : ${incorrect}`);
-            endTest();
-          }
-
+          if (seconds <= 0) endTest();
           $("#span-timer").text(`00:${seconds < 10 ? "0" : ""}${seconds % 60}`);
           seconds--;
         }, 1000);
@@ -172,19 +237,16 @@
       $("#input-typed").keyup(function (event) {
         let typed = $("#input-typed").val();
         let currentWord = $(`span[wordnumber="${currentIndex}"]`).text();
-        if (!started && typed.length == 1) {
-          startTimer();
-          started = true;
-        }
+        if (!started && typed.length == 1) startTimer();
 
         if (event.key == " ") {
           typed = typed.slice(0, typed.length - 1);
 
           if (typed === currentWord) {
-            correct++;
+            correctWords.push(typed);
             setWordColor(currentIndex, "text-success");
           } else {
-            incorrect++;
+            incorrectWords.push([currentIndex, typed]);
             setWordColor(currentIndex, "text-danger");
           }
 
