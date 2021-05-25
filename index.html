@@ -3,34 +3,171 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TypingMeter</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
       crossorigin="anonymous"
     />
-
-    <title>TypingMeter</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <p id="demo"></p>
+
+  <body class="bg-light">
+    <div class="container my-5">
+      <div class="row">
+        <div class="offset-md-2 col-md-8">
+          <h1>Typing Meter</h1>
+          <h6>The open source typing speed test</h6>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="offset-md-2 col-md-8">
+          <div class="card my-2">
+            <div id="paragraph-words" class="card-body fs-5">
+              <div class="text-center">
+                <div class="spinner-border" role="status"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input
+              id="input-typed"
+              type="text"
+              class="form-control form-control-lg"
+              autofocus
+            />
+            <span id="span-timer" class="input-group-text px-4">01:00</span>
+            <button
+              class="btn btn-success px-4"
+              type="button"
+              id="button-reset"
+            >
+              <i class="bi bi-arrow-repeat"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function () {
+      let request = new XMLHttpRequest();
+      let response = Array();
+
+      request.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-          var myObj = JSON.parse(this.responseText);
-          document.getElementById("demo").innerHTML = myObj;
-          console.log(this.responseText);
+          response = JSON.parse(this.responseText).words;
+
+          randomWords(response);
+          feedWords();
         }
       };
-      xmlhttp.open(
+
+      request.open(
         "GET",
         "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/raw/english_200.json",
         true
       );
-      xmlhttp.send();
+
+      request.send();
     </script>
+
+    <script>
+      let words = Array();
+      function randomWords(data) {
+        for (let i = 0; i < 390; i++) {
+          let word = data[Math.floor(Math.random() * data.length)];
+          words.push(`<span wordnumber="${i}">${word}</span> `);
+        }
+      }
+
+      function feedWords(startFrom = 0, count = 30) {
+        let wordsHtml = "";
+        for (let i = startFrom; i < startFrom + count; i++) {
+          wordsHtml += words[i];
+        }
+        $("#paragraph-words").html(wordsHtml);
+        highlightWord(startFrom);
+      }
+
+      function restartTest() {}
+    </script>
+
+    <script>
+      let timerStarted = false;
+      let currentIndex = 0;
+      let correct = 0;
+      let incorrect = 0;
+
+      $("#input-typed").keyup(function (event) {
+        let typed = $("#input-typed").val();
+        let currentWord = $(`span[wordnumber="${currentIndex}"]`).text();
+        if (!timerStarted && typed.length == 1) {
+          startTimer();
+          timerStarted = true;
+        }
+
+        if (event.key == " ") {
+          typed = typed.slice(0, typed.length - 1);
+
+          if (typed === currentWord) {
+            correct++;
+            setWordColor(currentIndex, "text-success");
+          } else {
+            incorrect++;
+            setWordColor(currentIndex, "text-danger");
+          }
+
+          $("#input-typed").val("");
+          if (typed.length > 0) currentIndex++;
+          if (currentIndex % 30 == 0) feedWords(currentIndex);
+          highlightWord(currentIndex);
+        } else {
+          currentWord = currentWord.slice(0, typed.length);
+          let correct = typed == currentWord;
+          highlightWord(currentIndex, correct ? "bg-secondary" : "bg-danger");
+        }
+      });
+    </script>
+
+    <script>
+      function startTimer() {
+        let seconds = 59;
+        let timer = setInterval(() => {
+          if (seconds <= 0) {
+            clearInterval(timer);
+            alert(`Time is up\nCorrect : ${correct}\nIncorrect : ${incorrect}`);
+          }
+
+          $("#span-timer").text(`00:${seconds < 10 ? "0" : ""}${seconds % 60}`);
+          seconds--;
+        }, 1000);
+      }
+    </script>
+
+    <script>
+      function highlightWord(index = 0, color = "bg-secondary") {
+        let previousWord = $(`span[wordnumber="${index - 1}"]`);
+        previousWord.removeClass(color);
+
+        let currentWord = $(`span[wordnumber="${index}"]`);
+        currentWord.removeClass();
+        currentWord.addClass(color);
+      }
+
+      function setWordColor(index = 0, color = "text-body") {
+        let currentWord = $(`span[wordnumber="${index}"]`);
+        currentWord.removeClass();
+        currentWord.addClass(color);
+      }
+    </script>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
