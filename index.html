@@ -102,6 +102,8 @@
       let incorrectWords = Array();
 
       let request = new XMLHttpRequest();
+      let requestUrl =
+        "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/english_200.json";
       let response = Array();
 
       request.onreadystatechange = function () {
@@ -110,13 +112,7 @@
           startTest();
         }
       };
-
-      request.open(
-        "GET",
-        "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/raw/english_200.json",
-        true
-      );
-
+      request.open("GET", requestUrl, true);
       request.send();
 
       function randomWords(words) {
