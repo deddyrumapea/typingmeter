@@ -29,8 +29,9 @@
       <div class="row">
         <div class="offset-md-2 col-md-8">
           <div class="card my-2">
-            <div id="paragraph-words" class="card-body fs-5">
-              <div class="text-center">
+            <div class="card-body fs-5">
+              <div id="paragraph-words"></div>
+              <div id="spinner-words" class="text-center">
                 <div class="spinner-border" role="status"></div>
               </div>
             </div>
@@ -190,6 +191,7 @@
         incorrectWords = Array();
         feedWords();
         resetTimer();
+        $("#spinner-words").addClass("visually-hidden");
         $("#input-typed").prop("disabled", false);
         $("#input-typed").val("");
         $("#input-typed").focus();
