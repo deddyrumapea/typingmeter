@@ -11,8 +11,8 @@
       crossorigin="anonymous"
     />
     <link
-      rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+      rel="stylesheet"
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
@@ -93,7 +93,7 @@
       let started = false;
 
       let wordsCount = 390;
-      let feedCount = 30;
+      let feedCount = 20;
 
       let timer = null;
       let timeLimit = 59;
@@ -128,7 +128,7 @@
       function spanifyWords(words) {
         let result = Array();
         words.forEach((word, i) => {
-          result.push(`<span wordnumber="${i}">${word}</span> `);
+          result.push(`<span class="word" wordnumber="${i}">${word}</span> `);
         });
         return result;
       }
@@ -250,7 +250,7 @@
 
           $("#input-typed").val("");
           if (typed.length > 0) currentIndex++;
-          if (currentIndex % 30 == 0) feedWords(currentIndex);
+          if (currentIndex % feedCount == 0) feedWords(currentIndex);
           highlightWord(currentIndex);
         } else {
           currentWord = currentWord.slice(0, typed.length);
