@@ -15,20 +15,10 @@
       rel="stylesheet"
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <style>
-      .word {
-        background-color: lightblue;
-        color: #212529;
-        padding: 0 5px;
-        font-size: 1.5rem;
-        border-radius: 3px;
-      }
-
-      .word .active {
-        background-color: lightseagreen;
-      }
-    </style>
+    <link
+      href="https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/css/styles.css"
+      rel="stylesheet"
+    />
   </head>
 
   <body class="bg-light">
@@ -233,7 +223,7 @@
 
         let currentWord = $(`span[wordnumber="${index}"]`);
         currentWord.removeClass();
-        currentWord.addClass(color);
+        currentWord.addClass("active");
       }
 
       function setWordColor(index = 0, color = "text-body") {
