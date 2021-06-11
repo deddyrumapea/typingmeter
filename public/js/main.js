@@ -12,7 +12,7 @@ let incorrectWords = Array();
 
 let request = new XMLHttpRequest();
 let requestUrl =
-  "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/english_200.json";
+  "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/public/json/english_200.json";
 let response = Array();
 
 request.onreadystatechange = function () {
