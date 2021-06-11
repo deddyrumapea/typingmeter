@@ -48,7 +48,6 @@ function feedWords(startFrom = 0, count = feedCount) {
     wordsSpan += words[i];
   }
   $("#paragraph-words").html(wordsSpan);
-  // highlightWord(startFrom);
   setWordActive(startFrom);
 }
 
@@ -127,19 +126,6 @@ function resetTimer() {
   $("#span-timer").text("01:00");
 }
 
-function setWordColor(index = 0, color = "text-body") {
-  alert(0);
-}
-
-function highlightWord(index = 0) {
-  // let previousWord = $(`span[wordnumber="${index - 1}"]`);
-  // previousWord.removeClass("word-active");
-
-  // let currentWord = $(`span[wordnumber="${index}"]`);
-  // currentWord.addClass("word-active");
-  alert(1);
-}
-
 function setWordActive(index){
   let currentWord = $(`span[wordnumber="${index}"]`);
   currentWord.removeClass("word-error");
@@ -181,12 +167,10 @@ $("#input-typed").keyup(function (event) {
     $("#input-typed").val("");
     if (typed.length > 0) currentIndex++;
     if (currentIndex % feedCount == 0) feedWords(currentIndex);
-    // highlightWord(currentIndex);
     setWordActive(currentIndex);
   } else {
     currentWord = currentWord.slice(0, typed.length);
     let correct = typed == currentWord;
-    // highlightWord(currentIndex, correct ? "bg-secondary" : "bg-danger");
     if(correct) setWordActive(currentIndex); else setWordError(currentIndex); 
   }
 });
