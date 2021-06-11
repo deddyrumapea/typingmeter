@@ -48,8 +48,14 @@ function feedWords(startFrom = 0, count = feedCount) {
     wordsSpan += words[i];
   }
   $("#paragraph-words").html(wordsSpan);
-  highlightWord(startFrom);
+  // highlightWord(startFrom);
+  setWordActive(startFrom);
 }
+
+$("#button-restart").click(function () {
+  restartTest();
+});
+
 
 function restartTest() {
   startTest();
@@ -121,24 +127,40 @@ function resetTimer() {
   $("#span-timer").text("01:00");
 }
 
-function highlightWord(index = 0, color = "bg-secondary") {
-  let previousWord = $(`span[wordnumber="${index - 1}"]`);
-  previousWord.removeClass(color);
-
-  let currentWord = $(`span[wordnumber="${index}"]`);
-  currentWord.removeClass();
-  currentWord.addClass("active");
-}
-
 function setWordColor(index = 0, color = "text-body") {
-  let currentWord = $(`span[wordnumber="${index}"]`);
-  currentWord.removeClass();
-  currentWord.addClass(color);
+  alert(0);
 }
 
-$("#button-restart").click(function () {
-  restartTest();
-});
+function highlightWord(index = 0) {
+  // let previousWord = $(`span[wordnumber="${index - 1}"]`);
+  // previousWord.removeClass("word-active");
+
+  // let currentWord = $(`span[wordnumber="${index}"]`);
+  // currentWord.addClass("word-active");
+  alert(1);
+}
+
+function setWordActive(index){
+  let currentWord = $(`span[wordnumber="${index}"]`);
+  currentWord.removeClass("word-error");
+  currentWord.addClass("word-active");
+}
+
+function setWordError(index){
+  let currentWord = $(`span[wordnumber="${index}"]`);
+  currentWord.removeClass("word-active");
+  currentWord.addClass("word-error");
+}
+
+function setWordCorrect(index){
+  let currentWord = $(`span[wordnumber="${index}"]`);
+  currentWord.addClass("word-correct");
+}
+
+function setWordIncorrect(index){
+  let currentWord = $(`span[wordnumber="${index}"]`);
+  currentWord.addClass("word-incorrect");
+}
 
 $("#input-typed").keyup(function (event) {
   let typed = $("#input-typed").val();
@@ -150,19 +172,21 @@ $("#input-typed").keyup(function (event) {
 
     if (typed === currentWord) {
       correctWords.push(typed);
-      setWordColor(currentIndex, "text-success");
+      setWordCorrect(currentIndex, "text-success");
     } else {
       incorrectWords.push([currentIndex, typed]);
-      setWordColor(currentIndex, "text-danger");
+      setWordIncorrect(currentIndex, "text-danger");
     }
 
     $("#input-typed").val("");
     if (typed.length > 0) currentIndex++;
     if (currentIndex % feedCount == 0) feedWords(currentIndex);
-    highlightWord(currentIndex);
+    // highlightWord(currentIndex);
+    setWordActive(currentIndex);
   } else {
     currentWord = currentWord.slice(0, typed.length);
     let correct = typed == currentWord;
-    highlightWord(currentIndex, correct ? "bg-secondary" : "bg-danger");
+    // highlightWord(currentIndex, correct ? "bg-secondary" : "bg-danger");
+    if(correct) setWordActive(currentIndex); else setWordError(currentIndex); 
   }
 });
