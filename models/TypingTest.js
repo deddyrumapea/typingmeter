@@ -46,13 +46,41 @@ export default class TypingTest {
   }
 
   getResult() {
+    return {
+      wpm: this.getWpm(),
+      totalKeys: this.getCorrectKeys() + this.getIncorrectKeys(),
+      correctKeys: this.getCorrectKeys(),
+      incorrectKeys: this.getIncorrectKeys(),
+      accuracy: this.getAccuracy(),
+      correctWords: this.correctInput.length,
+      incorrectWords: this.incorrectInput.length,
+    };
+  }
+
+  getWpm() {
+    let totalLength = 0;
+    this.words.forEach((word) => {
+      totalLength += word.length;
+    });
+
+    let avgLength = totalLength / this.words.length;
+
+    return Math.round(this.getCorrectKeys() / avgLength);
+  }
+
+  getCorrectKeys() {
     let correctKeys = 0;
-    let incorrectKeys = 0;
 
     this.correctInput.forEach((index) => {
       let word = this.words[index];
-      correctKeys += word.length + 1; // add spaces keystrokes
+      correctKeys += word.length + 1; // add space keystrokes
     });
+
+    return correctKeys;
+  }
+
+  getIncorrectKeys() {
+    let incorrectKeys = 0;
 
     this.incorrectInput.forEach((element) => {
       let correctAnswer = this.words[element.index];
@@ -62,17 +90,12 @@ export default class TypingTest {
       });
     });
 
-    let totalKeys = correctKeys + incorrectKeys;
-    let accuracy = ((correctKeys / totalKeys) * 100).toFixed(2);
+    return incorrectKeys;
+  }
 
-    return {
-      wpm: this.correctInput.length,
-      totalKeys: totalKeys,
-      correctKeys: correctKeys,
-      incorrectKeys: incorrectKeys,
-      accuracy: accuracy,
-      correctWords: this.correctInput.length,
-      incorrectWords: this.incorrectInput.length,
-    };
+  getAccuracy() {
+    let correct = this.getCorrectKeys();
+    let total = correct + this.getIncorrectKeys();
+    return ((correct / total) * 100).toFixed(2);
   }
 }
