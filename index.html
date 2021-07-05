@@ -21,7 +21,7 @@
     <div class="container my-5">
       <div class="row">
         <div class="offset-md-2 col-md-8">
-          <h1>Typing Meter</h1>
+          <h1>TypingMeter</h1>
           <h6>The open source typing speed test</h6>
         </div>
       </div>
@@ -29,10 +29,31 @@
       <div class="row">
         <div class="offset-md-2 col-md-8">
           <div class="card my-2">
-            <div class="card-body fs-5">
-              <div id="feed-container"></div>
+            <div class="card-body">
+              <div id="feed-container" class="fs-4"></div>
               <div id="feed-spinner" class="text-center">
                 <div class="spinner-border" role="status"></div>
+              </div>
+              <div id="result-container" class="visually-hidden">
+                <table class="table table-borderless m-0">
+                  <tr>
+                    <td
+                      id="result-wpm"
+                      class="text-success fs-1"
+                      rowspan="2"
+                    ></td>
+                    <th>Keystrokes</th>
+                    <td id="result-keystrokes"></td>
+                    <th>Accuracy</th>
+                    <td id="result-accuracy"></td>
+                  </tr>
+                  <tr>
+                    <th>Correct words</th>
+                    <td id="result-correct-words"></td>
+                    <th>Wrong words</th>
+                    <td id="result-wrong-words"></td>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>
@@ -52,38 +73,6 @@
             >
               <i class="bi bi-arrow-repeat"></i>
             </button>
-          </div>
-
-          <div
-            id="card-result"
-            class="card visually-hidden"
-            style="width: 18rem"
-          >
-            <div class="card-header">Result</div>
-            <div class="card-body">
-              <h3
-                id="result-wpm"
-                class="card-title text-center text-success"
-              ></h3>
-              <table class="table">
-                <tr>
-                  <th>Keystrokes</th>
-                  <td id="result-keystrokes"></td>
-                </tr>
-                <tr>
-                  <th>Accuracy</th>
-                  <td id="result-accuracy"></td>
-                </tr>
-                <tr>
-                  <th>Correct words</th>
-                  <td id="result-correct-words"></td>
-                </tr>
-                <tr>
-                  <th>Wrong words</th>
-                  <td id="result-wrong-words"></td>
-                </tr>
-              </table>
-            </div>
           </div>
         </div>
       </div>

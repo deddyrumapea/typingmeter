@@ -17,10 +17,13 @@ $(document).ready(() => {
 
 function startTest() {
   currentIndex = 0;
+  typingTest.randomizeWords();
   updateFeed();
   timer.reset();
-  $("#span-timer").text("01:00");
+  $("#result-container").addClass("visually-hidden");
+  $("#feed-container").removeClass("visually-hidden");
   $("#feed-spinner").addClass("visually-hidden");
+  $("#span-timer").text("01:00");
   $("#input-typed").prop("disabled", false);
   $("#input-typed").val("");
   $("#input-typed").focus();
@@ -37,7 +40,8 @@ function endTest() {
 
   $("#input-typed").prop("disabled", true);
   $("#input-typed").val("");
-  $("#card-result").removeClass("visually-hidden");
+  $("#result-container").removeClass("visually-hidden");
+  $("#feed-container").addClass("visually-hidden");
 
   let result = typingTest.getResult();
 
@@ -45,7 +49,7 @@ function endTest() {
   $("#result-keystrokes").text(
     `(${result.correctKeys} | ${result.incorrectKeys}) ${result.totalKeys}`
   );
-  $("#result-accuracy").text(result.accuracy);
+  $("#result-accuracy").text(result.accuracy + "%");
   $("#result-correct-words").text(result.correctWords);
   $("#result-wrong-words").text(result.incorrectWords);
 }
