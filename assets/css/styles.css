@@ -1,9 +1,8 @@
 .word {
   background-color: lightblue;
   color: #212529;
-  padding: 0 5px;
-  font-size: 1.5rem;
-  border-radius: 3px;
+  padding: 0 0.2em;
+  border-radius: 0.15em;
 }
 
 .word-active {
