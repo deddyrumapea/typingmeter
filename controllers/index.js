@@ -1,63 +1,35 @@
-let started = false;
-
-let wordsCount = 390;
-let feedCount = 20;
-
-let timer = null;
-let timeLimit = 59;
+import TypingTest from "../models/TypingTest.js";
+import Timer from "../models/Timer.js";
 
 let currentIndex = 0;
-let correctWords = Array();
-let incorrectWords = Array();
+let typingTest;
+let timer = new Timer();
 
-let request = new XMLHttpRequest();
-let requestUrl =
-  "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/english_200.json";
-let response = Array();
-
-request.onreadystatechange = function () {
-  if (this.readyState == 4 && this.status == 200) {
-    response = randomWords(JSON.parse(this.responseText).words);
+$(document).ready(() => {
+  let url =
+    "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/english_200.json";
+  sendRequest(url, (response) => {
+    let words = JSON.parse(response).words;
+    typingTest = new TypingTest(words);
     startTest();
-  }
-};
-request.open("GET", requestUrl, true);
-request.send();
-
-function randomWords(words) {
-  let result = Array();
-  for (let i = 0; i < wordsCount; i++) {
-    let word = words[Math.floor(Math.random() * words.length)];
-    result.push(word);
-  }
-  return result;
-}
-
-function spanifyWords(words) {
-  let result = Array();
-  words.forEach((word, i) => {
-    result.push(`<span class="word" wordnumber="${i}">${word}</span> `);
   });
-  return result;
-}
-
-function feedWords(startFrom = 0, count = feedCount) {
-  let words = spanifyWords(response);
-  let wordsSpan = "";
-  for (let i = startFrom; i < startFrom + count; i++) {
-    wordsSpan += words[i];
-  }
-  $("#paragraph-words").html(wordsSpan);
-  setWordActive(startFrom);
-}
-
-$("#button-restart").click(function () {
-  restartTest();
 });
 
+function startTest() {
+  currentIndex = 0;
+  updateFeed();
+  timer.reset();
+  $("#span-timer").text("01:00");
+  $("#feed-spinner").addClass("visually-hidden");
+  $("#input-typed").prop("disabled", false);
+  $("#input-typed").val("");
+  $("#input-typed").focus();
+}
 
-function restartTest() {
-  startTest();
+function updateFeed(startFrom = 0) {
+  let feed = typingTest.getFeed(startFrom);
+  $("#feed-container").html(feed);
+  setWordActive(startFrom);
 }
 
 function endTest() {
@@ -67,110 +39,91 @@ function endTest() {
   $("#input-typed").val("");
   $("#card-result").removeClass("visually-hidden");
 
-  let correctKeystrokes = 0;
-  let incorrectKeystrokes = 0;
+  let result = typingTest.getResult();
 
-  correctWords.forEach((element) => {
-    correctKeystrokes += element.length;
-  });
-  correctKeystrokes += correctWords.length; // add spaces keystrokes
-
-  incorrectWords.forEach((element) => {
-    let wrongIndex = element[0];
-    let correctAnswer = response[wrongIndex];
-
-    element[1].split("").forEach((letter, i) => {
-      if (letter != correctAnswer.charAt(i)) incorrectKeystrokes++;
-    });
-  });
-
-  let totalKeystrokes = correctKeystrokes + incorrectKeystrokes;
-  let accuracy = ((correctKeystrokes / totalKeystrokes) * 100).toFixed(2);
-
-  $("#result-wpm").text(`${correctWords.length} WPM`);
+  $("#result-wpm").text(`${result.wpm} WPM`);
   $("#result-keystrokes").text(
-    `(${correctKeystrokes} | ${incorrectKeystrokes}) ${totalKeystrokes}`
+    `(${result.correctKeys} | ${result.incorrectKeys}) ${result.totalKeys}`
   );
-  $("#result-accuracy").text(accuracy);
-  $("#result-correct-words").text(correctWords.length);
-  $("#result-wrong-words").text(incorrectWords.length);
+  $("#result-accuracy").text(result.accuracy);
+  $("#result-correct-words").text(result.correctWords);
+  $("#result-wrong-words").text(result.incorrectWords);
 }
 
-function startTest() {
-  response = randomWords(response);
-  started = false;
-  currentIndex = 0;
-  correctWords = Array();
-  incorrectWords = Array();
-  feedWords();
-  resetTimer();
-  $("#spinner-words").addClass("visually-hidden");
-  $("#input-typed").prop("disabled", false);
-  $("#input-typed").val("");
-  $("#input-typed").focus();
+$("#button-restart").click(function () {
+  startTest();
+});
+
+function setWordActive(index) {
+  getCurrentWord(index).removeClass("word-error");
+  getCurrentWord(index).addClass("word-active");
+}
+
+function setWordError(index) {
+  getCurrentWord(index).removeClass("word-active");
+  getCurrentWord(index).addClass("word-error");
+}
+
+function setWordCorrect(index) {
+  getCurrentWord(index).addClass("word-correct");
+}
+
+function setWordIncorrect(index) {
+  getCurrentWord(index).addClass("word-incorrect");
 }
 
 function startTimer() {
-  started = true;
-  let seconds = timeLimit;
-  timer = setInterval(() => {
-    if (seconds <= 0) endTest();
+  let onTick = (seconds) => {
     $("#span-timer").text(`00:${seconds < 10 ? "0" : ""}${seconds % 60}`);
-    seconds--;
-  }, 1000);
+  };
+
+  let onFinish = () => {
+    endTest();
+    timer.reset();
+  };
+  timer.start(onTick, onFinish);
 }
 
-function resetTimer() {
-  clearInterval(timer);
-  timer = null;
-  $("#span-timer").text("01:00");
-}
-
-function setWordActive(index){
-  let currentWord = $(`span[wordnumber="${index}"]`);
-  currentWord.removeClass("word-error");
-  currentWord.addClass("word-active");
-}
-
-function setWordError(index){
-  let currentWord = $(`span[wordnumber="${index}"]`);
-  currentWord.removeClass("word-active");
-  currentWord.addClass("word-error");
-}
-
-function setWordCorrect(index){
-  let currentWord = $(`span[wordnumber="${index}"]`);
-  currentWord.addClass("word-correct");
-}
-
-function setWordIncorrect(index){
-  let currentWord = $(`span[wordnumber="${index}"]`);
-  currentWord.addClass("word-incorrect");
-}
-
-$("#input-typed").keyup(function (event) {
+$("#input-typed").keyup((event) => {
   let typed = $("#input-typed").val();
-  let currentWord = $(`span[wordnumber="${currentIndex}"]`).text();
-  if (!started && typed.length == 1) startTimer();
+  let word = getCurrentWord(currentIndex).text();
+
+  if (!timer.started && typed.length == 1) startTimer();
 
   if (event.key == " ") {
     typed = typed.slice(0, typed.length - 1);
 
-    if (typed === currentWord) {
-      correctWords.push(typed);
+    if (typed === word) {
+      typingTest.addCorrectWord(currentIndex);
       setWordCorrect(currentIndex, "text-success");
     } else {
-      incorrectWords.push([currentIndex, typed]);
+      typingTest.addIncorrectWord(currentIndex, typed);
       setWordIncorrect(currentIndex, "text-danger");
     }
 
     $("#input-typed").val("");
     if (typed.length > 0) currentIndex++;
-    if (currentIndex % feedCount == 0) feedWords(currentIndex);
+    if (currentIndex % typingTest.feedCount == 0) updateFeed(currentIndex);
     setWordActive(currentIndex);
   } else {
-    currentWord = currentWord.slice(0, typed.length);
-    let correct = typed == currentWord;
-    if(correct) setWordActive(currentIndex); else setWordError(currentIndex); 
+    word = word.slice(0, typed.length);
+    if (typed == word) setWordActive(currentIndex);
+    else setWordError(currentIndex);
   }
 });
+
+function getCurrentWord() {
+  return $(`#word-${currentIndex}`);
+}
+
+function sendRequest(url, onReady) {
+  let request = new XMLHttpRequest();
+
+  request.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      onReady(this.responseText);
+    }
+  };
+  request.open("GET", url, true);
+  request.send();
+}
