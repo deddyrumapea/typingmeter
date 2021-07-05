@@ -17,6 +17,7 @@ $(document).ready(() => {
 
 function startTest() {
   currentIndex = 0;
+  typingTest.randomizeWords();
   updateFeed();
   timer.reset();
   $("#result-container").addClass("visually-hidden");

@@ -31,6 +31,10 @@ export default class TypingTest {
     return result;
   }
 
+  randomizeWords() {
+    this.words = this.getRandomWords(this.words);
+  }
+
   getFeed(startFrom = 0) {
     let result = "";
 
