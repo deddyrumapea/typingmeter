@@ -44,12 +44,12 @@
                     ></td>
                     <th>Keystrokes</th>
                     <td id="result-keystrokes"></td>
-                    <th>Accuracy</th>
-                    <td id="result-accuracy"></td>
-                  </tr>
-                  <tr>
                     <th>Correct words</th>
                     <td id="result-correct-words"></td>
+                  </tr>
+                  <tr>
+                    <th>Accuracy</th>
+                    <td id="result-accuracy"></td>
                     <th>Wrong words</th>
                     <td id="result-wrong-words"></td>
                   </tr>
@@ -73,6 +73,57 @@
             >
               <i class="bi bi-arrow-repeat"></i>
             </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="offset-md-2 col-md-8">
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                >
+                  History
+                </button>
+              </h2>
+              <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">WPM</th>
+                        <th scope="col">Keystrokes</th>
+                        <th scope="col">Accuracy</th>
+                        <th scope="col">Correct words</th>
+                        <th scope="col">Wrong words</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>July 5, 2021</td>
+                        <td>69</td>
+                        <td>(13 | 3) 16</td>
+                        <td>81.25%</td>
+                        <td>67</td>
+                        <td>4</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
