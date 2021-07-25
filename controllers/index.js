@@ -145,7 +145,7 @@ function refreshHistory() {
   if (results.length === 0) {
     $("#table-history").find("tbody").append(`
     <tr>
-      <td colspan="5"><i>Result history is empty.</i></td>
+      <td colspan="6"><i>Result history is empty.</i></td>
     </tr>
     `);
   }
@@ -153,25 +153,26 @@ function refreshHistory() {
   results.forEach((result, i) => {
     $("#table-history").find("tbody").append(`
       <tr>
-        <td>${moment(result.unix).fromNow()}</td>
-        <td>${result.wpm}</td>
-        <td>${result.accuracy}%</td>
-        <td>
+      <td>${result.wpm}</td>
+      <td>${result.accuracy}%</td>
+      <td>${result.percentile}%</td>
+      <td>
           <span class="badge rounded-pill bg-success">
-            <i class="bi bi-check fw-bold"></i>${result.correctKeys}
+          <i class="bi bi-check fw-bold"></i>${result.correctKeys}
           </span>
           <span class="badge rounded-pill bg-danger">
-            <i class="bi bi-x fw-bold"></i>${result.incorrectKeys}
+          <i class="bi bi-x fw-bold"></i>${result.incorrectKeys}
           </span>
-        </td>
-        <td>
+          </td>
+          <td>
           <span class="badge rounded-pill bg-success">
-            <i class="bi bi-check fw-bold"></i>${result.correctWords}
+          <i class="bi bi-check fw-bold"></i>${result.correctWords}
           </span>
           <span class="badge rounded-pill bg-danger">
-            <i class="bi bi-x fw-bold"></i>${result.incorrectWords}
+          <i class="bi bi-x fw-bold"></i>${result.incorrectWords}
           </span>
-        </td>
+          </td>
+          <td>${moment(result.unix).fromNow()}</td>
       </tr>
         `);
   });
