@@ -20,7 +20,6 @@ $(document).ready(() => {
 
 function startTest() {
   currentIndex = 0;
-  typingTest.randomizeWords();
   updateFeed();
   timer.reset();
   $("#result-container").addClass("visually-hidden");
@@ -49,12 +48,10 @@ function endTest() {
   let result = typingTest.getResult();
 
   $("#result-wpm").text(`${result.wpm} WPM`);
-  $("#result-keystrokes").text(
-    `(${result.correctKeys} | ${result.incorrectKeys}) ${
-      result.correctKeys + result.incorrectKeys
-    }`
-  );
   $("#result-accuracy").text(result.accuracy + "%");
+  $("#result-percentile").text(result.percentile + "%");
+  $("#result-correct-keystrokes").text(result.correctKeys);
+  $("#result-wrong-keystrokes").text(result.incorrectKeys);
   $("#result-correct-words").text(result.correctWords);
   $("#result-wrong-words").text(result.incorrectWords);
 
@@ -63,6 +60,7 @@ function endTest() {
 }
 
 $("#button-restart").click(function () {
+  typingTest.reset();
   startTest();
 });
 
@@ -155,7 +153,7 @@ function refreshHistory() {
   results.forEach((result, i) => {
     $("#table-history").find("tbody").append(`
       <tr>
-        <td>${moment(result.unix).toNow()}</td>
+        <td>${moment(result.unix).fromNow()}</td>
         <td>${result.wpm}</td>
         <td>${result.accuracy}%</td>
         <td>
