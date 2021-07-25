@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TypingMeter</title>
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" />
+    <title>typingmeter - Typing Speed Test</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -20,9 +21,40 @@
   <body class="bg-light">
     <div class="container my-5">
       <div class="row">
-        <div class="offset-md-2 col-md-8">
-          <h1>TypingMeter</h1>
-          <h6>The open source typing speed test</h6>
+        <div class="offset-md-2 col-md-4">
+          <h1>
+            <img src="/assets/images/logo.png" alt="typingmeter" width="100%" />
+          </h1>
+          <p>
+            <a
+              class="github-button"
+              href="https://github.com/deddyromnan/typingmeter/fork"
+              data-icon="octicon-repo-forked"
+              aria-label="Fork ntkme/github-buttons on GitHub"
+              >Open source. Fork me!</a
+            >
+          </p>
+        </div>
+        <div class="offset-md-2 col-md-2 text-end">
+          <div class="dropdown">
+            <button
+              class="btn btn btn-light"
+              type="button"
+              data-bs-toggle="dropdown"
+            >
+              <i class="bi bi-gear"></i> Settings
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="drowpdown-settings"
+            >
+              <li>
+                <a id="button-clear-history" class="dropdown-item" href="#"
+                  ><i class="bi bi-trash"></i> Clear history</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -136,5 +168,6 @@
       integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
       crossorigin="anonymous"
     ></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
