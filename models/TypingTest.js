@@ -51,14 +51,13 @@ export default class TypingTest {
 
   getResult() {
     return {
+      unix: moment().valueOf(),
       wpm: this.getWpm(),
-      totalKeys: this.getCorrectKeys() + this.getIncorrectKeys(),
+      accuracy: this.getAccuracy(),
       correctKeys: this.getCorrectKeys(),
       incorrectKeys: this.getIncorrectKeys(),
-      accuracy: this.getAccuracy(),
       correctWords: this.correctInput.length,
       incorrectWords: this.incorrectInput.length,
-      date: moment().format("D MMM YYYY hh:mm A"),
     };
   }
 

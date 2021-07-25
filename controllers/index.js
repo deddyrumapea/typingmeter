@@ -50,7 +50,9 @@ function endTest() {
 
   $("#result-wpm").text(`${result.wpm} WPM`);
   $("#result-keystrokes").text(
-    `(${result.correctKeys} | ${result.incorrectKeys}) ${result.totalKeys}`
+    `(${result.correctKeys} | ${result.incorrectKeys}) ${
+      result.correctKeys + result.incorrectKeys
+    }`
   );
   $("#result-accuracy").text(result.accuracy + "%");
   $("#result-correct-words").text(result.correctWords);
@@ -153,7 +155,7 @@ function refreshHistory() {
   results.forEach((result, i) => {
     $("#table-history").find("tbody").append(`
       <tr>
-        <td>${result.date}</td>
+        <td>${moment(result.unix).toNow()}</td>
         <td>${result.wpm}</td>
         <td>${result.accuracy}%</td>
         <td>
