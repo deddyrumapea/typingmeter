@@ -155,7 +155,7 @@ function refreshHistory() {
   results.forEach((result, i) => {
     $("#table-history").find("tbody").append(`
       <tr>
-        <td>${moment(result.unix).toNow()}</td>
+        <td>${moment(result.unix).fromNow()}</td>
         <td>${result.wpm}</td>
         <td>${result.accuracy}%</td>
         <td>
