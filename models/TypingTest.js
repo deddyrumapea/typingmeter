@@ -58,6 +58,7 @@ export default class TypingTest {
       accuracy: this.getAccuracy(),
       correctWords: this.correctInput.length,
       incorrectWords: this.incorrectInput.length,
+      date: moment().format("D MMM YYYY hh:mm A"),
     };
   }
 

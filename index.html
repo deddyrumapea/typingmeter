@@ -20,9 +20,30 @@
   <body class="bg-light">
     <div class="container my-5">
       <div class="row">
-        <div class="offset-md-2 col-md-8">
+        <div class="offset-md-2 col-md-5">
           <h1>TypingMeter</h1>
           <h6>The open source typing speed test</h6>
+        </div>
+        <div class="offset-md-1 col-md-2 text-end">
+          <div class="dropdown">
+            <button
+              class="btn btn btn-light"
+              type="button"
+              data-bs-toggle="dropdown"
+            >
+              <i class="bi bi-gear"></i> Settings
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="drowpdown-settings"
+            >
+              <li>
+                <a id="button-clear-history" class="dropdown-item" href="#"
+                  ><i class="bi bi-trash"></i> Clear history</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -78,48 +99,36 @@
       </div>
       <div class="row">
         <div class="offset-md-2 col-md-8">
-          <div class="accordion" id="accordionExample">
+          <div class="accordion" id="accordion-history">
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingOne">
                 <button
                   class="accordion-button"
                   type="button"
                   data-bs-toggle="collapse"
-                  data-bs-target="#collapseOne"
+                  data-bs-target="#collapse-history"
                 >
                   History
                 </button>
               </h2>
               <div
-                id="collapseOne"
+                id="collapse-history"
                 class="accordion-collapse collapse show"
                 aria-labelledby="headingOne"
-                data-bs-parent="#accordionExample"
+                data-bs-parent="#accordion-history"
               >
                 <div class="accordion-body">
-                  <table class="table">
+                  <table id="table-history" class="table">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Date</th>
                         <th scope="col">WPM</th>
-                        <th scope="col">Keystrokes</th>
                         <th scope="col">Accuracy</th>
-                        <th scope="col">Correct words</th>
-                        <th scope="col">Wrong words</th>
+                        <th scope="col">Keys</th>
+                        <th scope="col">Words</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>July 5, 2021</td>
-                        <td>69</td>
-                        <td>(13 | 3) 16</td>
-                        <td>81.25%</td>
-                        <td>67</td>
-                        <td>4</td>
-                      </tr>
-                    </tbody>
+                    <tbody></tbody>
                   </table>
                 </div>
               </div>
@@ -130,6 +139,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="controllers/index.js" type="module"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"

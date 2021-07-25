@@ -6,6 +6,7 @@ let typingTest;
 let timer = new Timer();
 
 $(document).ready(() => {
+  refreshHistory();
   let url =
     "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/english_200.json";
   sendRequest(url, (response) => {
@@ -52,6 +53,7 @@ function endTest() {
   $("#result-accuracy").text(result.accuracy + "%");
   $("#result-correct-words").text(result.correctWords);
   $("#result-wrong-words").text(result.incorrectWords);
+  saveResult(result);
 }
 
 $("#button-restart").click(function () {
@@ -131,3 +133,78 @@ function sendRequest(url, onReady) {
   request.open("GET", url, true);
   request.send();
 }
+
+const STORAGE_HISTORY = "history";
+
+function checkForStorage() {
+  return typeof Storage !== "undefined";
+}
+
+function saveResult(result) {
+  if (checkForStorage()) {
+    let isHistoryEmpty = localStorage.getItem(STORAGE_HISTORY) === null;
+
+    let history = isHistoryEmpty
+      ? []
+      : JSON.parse(localStorage.getItem(STORAGE_HISTORY));
+
+    history.unshift(result);
+
+    if (history.length > 5) {
+      history.pop();
+    }
+
+    localStorage.setItem(STORAGE_HISTORY, JSON.stringify(history));
+    refreshHistory();
+  }
+}
+
+function getResultHistory() {
+  return checkForStorage
+    ? JSON.parse(localStorage.getItem(STORAGE_HISTORY)) || []
+    : [];
+}
+
+function refreshHistory() {
+  const results = getResultHistory();
+  $("#table-history").find("tbody").empty();
+
+  if (results.length === 0) {
+    $("#table-history").find("tbody").append(`
+    <tr>
+      <td colspan="5"><i>Result history is empty.</i></td>
+    </tr>
+    `);
+  }
+
+  results.forEach((result, i) => {
+    $("#table-history").find("tbody").append(`
+      <tr>
+        <td>${result.date}</td>
+        <td>${result.wpm}</td>
+        <td>${result.accuracy}%</td>
+        <td>
+          <span class="badge rounded-pill bg-success">
+            <i class="bi bi-check fw-bold"></i>${result.correctKeys}
+          </span>
+          <span class="badge rounded-pill bg-danger">
+            <i class="bi bi-x fw-bold"></i>${result.incorrectKeys}
+          </span>
+        </td>
+        <td>
+          <span class="badge rounded-pill bg-success">
+            <i class="bi bi-check fw-bold"></i>${result.correctWords}
+          </span>
+          <span class="badge rounded-pill bg-danger">
+            <i class="bi bi-x fw-bold"></i>${result.incorrectWords}
+          </span>
+        </td>
+      </tr>
+        `);
+  });
+}
+
+$("#button-clear-history").click(() => {
+  localStorage.removeItem(STORAGE_HISTORY);
+  refreshHistory();
+});
