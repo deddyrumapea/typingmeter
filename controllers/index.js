@@ -1,9 +1,11 @@
 import TypingTest from "../models/TypingTest.js";
 import Timer from "../models/Timer.js";
+import ResultHistory from "../models/ResultHistory.js";
 
 let currentIndex = 0;
 let typingTest;
 let timer = new Timer();
+let history = new ResultHistory();
 
 $(document).ready(() => {
   refreshHistory();
@@ -53,7 +55,9 @@ function endTest() {
   $("#result-accuracy").text(result.accuracy + "%");
   $("#result-correct-words").text(result.correctWords);
   $("#result-wrong-words").text(result.incorrectWords);
-  saveResult(result);
+
+  history.save(result);
+  refreshHistory();
 }
 
 $("#button-restart").click(function () {
@@ -134,39 +138,8 @@ function sendRequest(url, onReady) {
   request.send();
 }
 
-const STORAGE_HISTORY = "history";
-
-function checkForStorage() {
-  return typeof Storage !== "undefined";
-}
-
-function saveResult(result) {
-  if (checkForStorage()) {
-    let isHistoryEmpty = localStorage.getItem(STORAGE_HISTORY) === null;
-
-    let history = isHistoryEmpty
-      ? []
-      : JSON.parse(localStorage.getItem(STORAGE_HISTORY));
-
-    history.unshift(result);
-
-    if (history.length > 5) {
-      history.pop();
-    }
-
-    localStorage.setItem(STORAGE_HISTORY, JSON.stringify(history));
-    refreshHistory();
-  }
-}
-
-function getResultHistory() {
-  return checkForStorage
-    ? JSON.parse(localStorage.getItem(STORAGE_HISTORY)) || []
-    : [];
-}
-
 function refreshHistory() {
-  const results = getResultHistory();
+  const results = history.findAll();
   $("#table-history").find("tbody").empty();
 
   if (results.length === 0) {
@@ -205,6 +178,6 @@ function refreshHistory() {
 }
 
 $("#button-clear-history").click(() => {
-  localStorage.removeItem(STORAGE_HISTORY);
+  history.clear();
   refreshHistory();
 });
