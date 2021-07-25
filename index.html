@@ -38,19 +38,19 @@
         <div class="offset-md-2 col-md-2 text-end">
           <div class="dropdown">
             <button
-              class="btn btn btn-light"
+              class="btn btn btn-outline-secondary"
               type="button"
               data-bs-toggle="dropdown"
             >
-              <i class="bi bi-gear"></i> Settings
+              <i class="bi bi-list"></i>
             </button>
             <ul
               class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="drowpdown-settings"
+              aria-labelledby="drowpdown-options"
             >
               <li>
                 <a id="button-clear-history" class="dropdown-item" href="#"
-                  ><i class="bi bi-trash"></i> Clear history</a
+                  ><i class="bi bi-trash-fill"></i> Clear history</a
                 >
               </li>
             </ul>
@@ -71,17 +71,23 @@
                   <tr>
                     <td
                       id="result-wpm"
-                      class="text-success fs-1"
-                      rowspan="2"
+                      class="text-success fs-1 align-middle"
+                      rowspan="3"
                     ></td>
-                    <th>Keystrokes</th>
-                    <td id="result-keystrokes"></td>
+                    <th>Accuracy</th>
+                    <td id="result-accuracy"></td>
+                    <th>Percentile</th>
+                    <td id="result-percentile"></td>
+                  </tr>
+                  <tr>
+                    <th>Correct Keystrokes</th>
+                    <td id="result-correct-keystrokes"></td>
                     <th>Correct words</th>
                     <td id="result-correct-words"></td>
                   </tr>
                   <tr>
-                    <th>Accuracy</th>
-                    <td id="result-accuracy"></td>
+                    <th>Wrong Keystrokes</th>
+                    <td id="result-wrong-keystrokes"></td>
                     <th>Wrong words</th>
                     <td id="result-wrong-words"></td>
                   </tr>
