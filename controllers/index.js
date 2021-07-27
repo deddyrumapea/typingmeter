@@ -9,9 +9,19 @@ let history = new ResultHistory();
 
 $(document).ready(() => {
   refreshHistory();
-  let url =
-    "https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/english_200.json";
-  sendRequest(url, (response) => {
+  fetchWords(undefined, (response) => {
+    let words = JSON.parse(response).words;
+    typingTest = new TypingTest(words);
+    startTest();
+  });
+});
+
+$("#select-language").on("change", () => {
+  let value = $("#select-language").val();
+  $("#feed-container").addClass("visually-hidden");
+  $("#feed-spinner").removeClass("visually-hidden");
+
+  fetchWords(value, (response) => {
     let words = JSON.parse(response).words;
     typingTest = new TypingTest(words);
     startTest();
@@ -23,8 +33,8 @@ function startTest() {
   updateFeed();
   timer.reset();
   $("#result-container").addClass("visually-hidden");
-  $("#feed-container").removeClass("visually-hidden");
   $("#feed-spinner").addClass("visually-hidden");
+  $("#feed-container").removeClass("visually-hidden");
   $("#span-timer").text("01:00");
   $("#input-typed").prop("disabled", false);
   $("#input-typed").val("");
@@ -126,7 +136,11 @@ function getCurrentWord() {
   return $(`#word-${currentIndex}`);
 }
 
-function sendRequest(url, onReady) {
+function fetchWords(fileName = "english_200", onReady) {
+  let url = `https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/${fileName}.json`;
+
+  // alert(fileName);
+
   let request = new XMLHttpRequest();
 
   request.onreadystatechange = function () {
