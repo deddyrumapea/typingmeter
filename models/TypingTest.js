@@ -4,6 +4,7 @@ export default class TypingTest {
   wordsCount = 0;
   feedCount = 0;
   words = null;
+  feedWords = null;
   correctInput = Array();
   incorrectInput = Array();
 
@@ -11,13 +12,22 @@ export default class TypingTest {
     this.wordsCount = wordsCount;
     this.feedCount = feedCount;
     this.words = words;
-    this.randomizeWords();
+    this.randomizeFeedWords();
   }
 
   reset() {
-    this.randomizeWords();
+    this.randomizeFeedWords();
     this.correctInput = Array();
     this.incorrectInput = Array();
+  }
+
+  randomizeFeedWords() {
+    this.feedWords = Array();
+
+    for (let i = 0; i < this.wordsCount; i++) {
+      let randomIndex = Math.floor(Math.random() * (this.words.length - 1));
+      this.feedWords.push(this.words[randomIndex]);
+    }
   }
 
   addCorrectWord(index) {
@@ -26,22 +36,6 @@ export default class TypingTest {
 
   addIncorrectWord(index, typed) {
     this.incorrectInput.push({ index: index, typed: typed });
-  }
-
-  getRandomWords(words) {
-    let result = Array();
-
-    for (let i = 0; i < this.wordsCount; i++) {
-      let randomIndex = Math.floor(Math.random() * (words.length - 1));
-      let word = words[randomIndex];
-      result.push(word);
-    }
-
-    return result;
-  }
-
-  randomizeWords() {
-    this.words = this.getRandomWords(this.words);
   }
 
   getFeed(startFrom = 0) {
@@ -55,7 +49,7 @@ export default class TypingTest {
   }
 
   getWordSpan(index) {
-    return `<span class="word" id="word-${index}">${this.words[index]}</span> `;
+    return `<span class="word" id="word-${index}">${this.feedWords[index]}</span> `;
   }
 
   getResult() {
@@ -79,7 +73,7 @@ export default class TypingTest {
     let correctKeys = 0;
 
     this.correctInput.forEach((index) => {
-      let word = this.words[index];
+      let word = this.feedWords[index];
       correctKeys += word.length + 1; // add space keystrokes
     });
 
@@ -90,7 +84,7 @@ export default class TypingTest {
     let incorrectKeys = 0;
 
     this.incorrectInput.forEach((element) => {
-      let correctAnswer = this.words[element.index];
+      let correctAnswer = this.feedWords[element.index];
 
       element.typed.split("").forEach((letter, i) => {
         if (letter != correctAnswer.charAt(i)) incorrectKeys++;
