@@ -1,4 +1,4 @@
-import DataSource from "./DataSource.js";
+import DataSource from "../../data/local/DataSource.js";
 
 export default class TypingTest {
   wordsCount = 0;
