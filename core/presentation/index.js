@@ -1,6 +1,6 @@
-import TypingTest from "../models/TypingTest.js";
-import Timer from "../models/Timer.js";
-import ResultHistory from "../models/ResultHistory.js";
+import TypingTest from "../domain/model/TypingTest.js";
+import Timer from "../domain/util/Timer.js";
+import ResultHistory from "../domain/util/ResultHistory.js";
 
 let currentIndex = 0;
 let typingTest;
