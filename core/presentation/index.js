@@ -1,19 +1,17 @@
-import TypingTest from "../domain/model/TypingTest.js";
-import Timer from "../domain/util/Timer.js";
-import ResultHistory from "../domain/util/ResultHistory.js";
+import TypingTest from "./util/typing_test.js";
+import Timer from "./util/timer.js";
+import WebStorageDao from "../data/web_storage/web_storage_dao.js";
+import TestResult from "../domain/model/test_result.js";
+import Word from "../data/static/word.js";
 
 let currentIndex = 0;
 let typingTest;
 let timer = new Timer();
-let history = new ResultHistory();
 
 $(document).ready(() => {
   refreshHistory();
-  fetchWords(undefined, (response) => {
-    let words = JSON.parse(response).words;
-    typingTest = new TypingTest(words);
-    startTest();
-  });
+  typingTest = new TypingTest(Word.WORDS_EN_200);
+  startTest();
 });
 
 $("#select-language").on("change", () => {
@@ -21,11 +19,16 @@ $("#select-language").on("change", () => {
   $("#feed-container").addClass("visually-hidden");
   $("#feed-spinner").removeClass("visually-hidden");
 
-  fetchWords(value, (response) => {
-    let words = JSON.parse(response).words;
-    typingTest = new TypingTest(words);
-    startTest();
-  });
+  switch (value) {
+    case "en_200":
+      typingTest = new TypingTest(Word.WORDS_EN_200);
+      startTest();
+      break;
+    case "id_200":
+      typingTest = new TypingTest(Word.WORDS_ID_200);
+      startTest();
+      break;
+  }
 });
 
 function startTest() {
@@ -65,7 +68,7 @@ function endTest() {
   $("#result-correct-words").text(result.correctWords);
   $("#result-wrong-words").text(result.incorrectWords);
 
-  history.save(result);
+  WebStorageDao.save(TestResult.STORAGE_KEY, TestResult.CAPACITY, result);
   refreshHistory();
 }
 
@@ -136,24 +139,8 @@ function getCurrentWord() {
   return $(`#word-${currentIndex}`);
 }
 
-function fetchWords(fileName = "english_200", onReady) {
-  let url = `https://raw.githubusercontent.com/deddyromnan/TypingMeter/main/assets/json/${fileName}.json`;
-
-  // alert(fileName);
-
-  let request = new XMLHttpRequest();
-
-  request.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      onReady(this.responseText);
-    }
-  };
-  request.open("GET", url, true);
-  request.send();
-}
-
 function refreshHistory() {
-  const results = history.findAll();
+  const results = WebStorageDao.findAll(TestResult.STORAGE_KEY);
   $("#table-history").find("tbody").empty();
 
   if (results.length === 0) {
@@ -193,6 +180,6 @@ function refreshHistory() {
 }
 
 $("#button-clear-history").click(() => {
-  history.clear();
+  WebStorageDao.clear(TestResult.STORAGE_KEY);
   refreshHistory();
 });

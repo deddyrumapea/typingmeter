@@ -1,4 +1,4 @@
-import DataSource from "../../data/local/DataSource.js";
+import Speed from "../../data/static/speed.js";
 
 export default class TypingTest {
   wordsCount = 0;
@@ -102,9 +102,9 @@ export default class TypingTest {
 
   getPercentile(cpm) {
     let percentile = 0;
-    for (let i = 0; i < DataSource.SPEED_DISTRIBUTION.length; i++) {
-      if (DataSource.SPEED_DISTRIBUTION[i].cpm > cpm) break;
-      percentile += DataSource.SPEED_DISTRIBUTION[i].percentage;
+    for (let i = 0; i < Speed.DISTRIBUTION.length; i++) {
+      if (Speed.DISTRIBUTION[i].cpm > cpm) break;
+      percentile += Speed.DISTRIBUTION[i].percentage;
     }
     return percentile.toFixed(2);
   }
