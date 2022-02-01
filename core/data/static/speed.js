@@ -1,5 +1,5 @@
-export default class DataSource {
-  static SPEED_DISTRIBUTION = [
+export default class Speed {
+  static DISTRIBUTION = [
     { cpm: 0, percentage: 0.1 },
     { cpm: 30, percentage: 0.1 },
     { cpm: 40, percentage: 0.3 },
