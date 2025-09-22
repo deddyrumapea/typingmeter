@@ -1,6 +1,6 @@
 # TypingMeter
 
-TypingMeter is a one-minute typing speed test that helps you track your words-per-minute (WPM), accuracy, and percentile right in the browser. Try it online at the [TypingMeter website](https://deddyromnan.github.io/typingmeter).
+TypingMeter is a one-minute typing speed test that helps you track your words-per-minute (WPM), accuracy, and percentile right in the browser. Try it online at the [TypingMeter website](https://deddyrumapea.github.io/typingmeter).
 
 ![TypingMeter screenshot](https://user-images.githubusercontent.com/14845590/175569825-1731c314-ed1c-453e-b8ca-9583d5f86ef0.png)
 
