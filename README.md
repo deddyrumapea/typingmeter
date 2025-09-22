@@ -1,6 +1,6 @@
 # TypingMeter
 
-TypingMeter is a one-minute typing speed test that helps you track your words-per-minute (WPM), accuracy, and percentile right in the browser. Try it online at the [TypingMeter website](https://deddyromnan.github.io/typingmeter).
+TypingMeter is a one-minute typing speed test that helps you track your words-per-minute (WPM), accuracy, and percentile right in the browser. Try it online at the [TypingMeter website](https://deddyrumapea.github.io/typingmeter).
 
 ![TypingMeter screenshot](https://user-images.githubusercontent.com/14845590/175569825-1731c314-ed1c-453e-b8ca-9583d5f86ef0.png)
 
@@ -50,6 +50,7 @@ These interactions mirror the behaviour defined in [core/presentation/index.js](
 - [Bootstrap 5](https://getbootstrap.com) for layout and styles.
 - [Bootstrap Icons](https://icons.getbootstrap.com/) for UI icons.
 - [jQuery](https://jquery.com/) and [Moment.js](https://momentjs.com/) for DOM interactions and time formatting.
+
 
 All external dependencies are loaded from CDNs in [`index.html`](index.html).
 
